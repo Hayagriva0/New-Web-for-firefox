@@ -100,7 +100,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 var period = h >= 12 ? 'PM' : 'AM';
                 var h12 = h % 12;
                 if (h12 === 0) h12 = 12;
-                clockEl.innerHTML = String(h12) + ':' + String(m).padStart(2, '0') + '<span style="margin-left: 8px;">' + period + '</span>';
+                clockEl.textContent = String(h12) + ':' + String(m).padStart(2, '0');
+                var periodSpan = document.createElement('span');
+                periodSpan.style.marginLeft = '8px';
+                periodSpan.textContent = period;
+                clockEl.appendChild(periodSpan);
             }
 
             /* Greeting */

@@ -10,18 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script>
-    try {
-      var savedTheme = localStorage.getItem('newweb_theme');
-      if (savedTheme === '"light"' || savedTheme === '"dark"') {
-        document.documentElement.setAttribute('data-theme', savedTheme.replace(/"/g, ''));
-      } else if (savedTheme === '"system"' || !savedTheme) {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-          document.documentElement.setAttribute('data-theme', 'light');
-        }
-      }
-    } catch (e) { }
-  </script>
+  <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 

@@ -129,13 +129,21 @@ var Suggestions = (() => {
 
         console.log('[Suggestions] Rendering', results.length, 'items');
 
-        var html = '';
+        dropdown.textContent = ''; // clear dropdown
         for (var i = 0; i < results.length; i++) {
-            html += '<div class="suggestion-item" data-idx="' + i + '">' +
-                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>' +
-                '<span>' + escapeHTML(results[i]) + '</span></div>';
+            var itemDiv = document.createElement('div');
+            itemDiv.className = 'suggestion-item';
+            itemDiv.setAttribute('data-idx', i);
+
+            // Insert static SVG safely
+            itemDiv.insertAdjacentHTML('beforeend', '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+
+            var spanEl = document.createElement('span');
+            spanEl.textContent = results[i]; // safe assignment
+            itemDiv.appendChild(spanEl);
+
+            dropdown.appendChild(itemDiv);
         }
-        dropdown.innerHTML = html;
         show();
     }
 
