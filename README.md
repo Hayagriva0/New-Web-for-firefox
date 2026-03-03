@@ -5,8 +5,7 @@
 
   **A premium, privacy-focused new tab experience with search, AI mode, weather, and favourite sites.**
 
-  [![Firefox Add-ons](https://img.shields.io/badge/Firefox-Available-FF7139?logo=firefoxbrowser&logoColor=white)](#)
-
+    [![Firefox Add-ons](https://img.shields.io/badge/Firefox-Available-blue?logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/new-web/)
 </div>
 
 ---
