@@ -17,6 +17,7 @@ const Storage = (() => {
     weatherLon: null,
     weatherCity: '',
     notesEnabled: false,
+    usageEnabled: true,
     topSitesEnabled: true,
     favourites: [
       { name: 'YouTube', url: 'https://www.youtube.com' },
@@ -32,11 +33,11 @@ const Storage = (() => {
     ]
   };
 
-  /* Detect if browser.storage.local is available */
-  const hasBrowserStorage = (
-    typeof browser !== 'undefined' &&
-    browser.storage &&
-    browser.storage.local
+  /* Detect if chrome.storage.local is available */
+  const hasChromeStorage = (
+    typeof chrome !== 'undefined' &&
+    chrome.storage &&
+    chrome.storage.local
   );
 
   /**
@@ -44,11 +45,11 @@ const Storage = (() => {
    */
   async function get(key) {
     try {
-      if (hasBrowserStorage) {
+      if (hasChromeStorage) {
         return new Promise((resolve) => {
-          browser.storage.local.get([key], (result) => {
-            if (browser.runtime.lastError) {
-              console.warn('Storage get error:', browser.runtime.lastError);
+          chrome.storage.local.get([key], (result) => {
+            if (chrome.runtime.lastError) {
+              console.warn('Storage get error:', chrome.runtime.lastError);
               resolve(getFromLocalStorage(key));
               return;
             }
@@ -68,11 +69,11 @@ const Storage = (() => {
    */
   async function set(key, value) {
     try {
-      if (hasBrowserStorage) {
+      if (hasChromeStorage) {
         return new Promise((resolve) => {
-          browser.storage.local.set({ [key]: value }, () => {
-            if (browser.runtime.lastError) {
-              console.warn('Storage set error:', browser.runtime.lastError);
+          chrome.storage.local.set({ [key]: value }, () => {
+            if (chrome.runtime.lastError) {
+              console.warn('Storage set error:', chrome.runtime.lastError);
               setToLocalStorage(key, value);
             }
             resolve();
@@ -90,11 +91,11 @@ const Storage = (() => {
    */
   async function getMultiple(keys) {
     try {
-      if (hasBrowserStorage) {
+      if (hasChromeStorage) {
         return new Promise((resolve) => {
-          browser.storage.local.get(keys, (result) => {
-            if (browser.runtime.lastError) {
-              console.warn('Storage getMultiple error:', browser.runtime.lastError);
+          chrome.storage.local.get(keys, (result) => {
+            if (chrome.runtime.lastError) {
+              console.warn('Storage getMultiple error:', chrome.runtime.lastError);
               resolve(getMultipleFromLocalStorage(keys));
               return;
             }
@@ -145,5 +146,34 @@ const Storage = (() => {
     return filled;
   }
 
-  return { get, set, getMultiple, DEFAULTS };
+  /**
+   * Clear all stored data.
+   */
+  async function clear() {
+    try {
+      if (hasChromeStorage) {
+        return new Promise((resolve) => {
+          chrome.storage.local.clear(() => {
+            if (chrome.runtime.lastError) {
+              console.warn('Storage clear error:', chrome.runtime.lastError);
+            }
+            resolve();
+          });
+        });
+      }
+      // Clear all newweb_ prefixed keys from localStorage
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('newweb_')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+    } catch (err) {
+      console.warn('Storage.clear failed:', err);
+    }
+  }
+
+  return { get, set, getMultiple, clear, DEFAULTS };
 })();
